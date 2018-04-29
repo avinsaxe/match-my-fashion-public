@@ -12,13 +12,32 @@ Rails.application.routes.draw do
   post 'general_info/update_profession' => 'general_info#update_profession', :as => 'general_info/update_profession'
   get 'general_info/profession_specific' => 'general_info#profession_specific', :as => 'general_info/profession_specific'
   post 'general_info/profession_specific' => 'general_info#profession_specific_create', :as => 'general_info/profession_specific_create'
+
+  namespace :admin do
+    get '/' => 'admin#landing'
+    get '/create' => 'admin#create'
+    post '/create' => 'admin#create'
+    get '/edit' => 'admin#edit'
+    post '/edit' => 'admin#edit'
+    get '/delete' => 'admin#delete'
+    post '/delete' => 'admin#delete'
+  end
+
+  get '/general_info/make_admin/:user' => 'general_info#make_admin' 
   
+  get 'edit_job' => 'edit_job#edit'
+  post 'edit_job' => 'edit_job#update'
+  patch 'edit_job/update' => 'edit_job#update'
+  post 'edit_job/update' => 'edit_job#update'
   get 'login_info_list' => 'login_info#list', :as => 'login_info_list'
-  get 'login_info/login' => 'login_info#login', :as => 'login_info/login'
+  # get 'login_info/login' => 'login_info#login', :as => 'login_info/login'
   post 'login_info/login_submit' => 'login_info#login_submit', :as => 'login_info/login_submit'
-  get 'login_info/logout' => 'login_info#logout', :as => 'login_info/logout'
+  # get 'login_info/logout' => 'login_info#logout', :as => 'login_info/logout'
   get 'login_info/edit' => 'login_info#edit', :as => 'login_info/edit'
   post 'login_info/update' => 'login_info#update', :as => 'login_info/update'
+  
+  post 'login' => 'login_info#login', :as => 'login'
+  get  'logout' => 'login_info#logout', :as => 'logout'
   
   get 'specific_designer_list' => 'specific_designer#list', :as => 'specific_designer_list'
   get 'specific_designer/edit' => 'specific_designer#edit', :as => 'specific_designer/edit'

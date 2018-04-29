@@ -12,6 +12,7 @@
 /tmp/*
 !/log/.keep
 !/tmp/.keep
+/tags
 
 # Ignore Byebug command history file.
 .byebug_history
@@ -20,3 +21,4 @@ TAMU-PROR-MatchMyFashion.iml
 
 .DS_Store
 coverage
+public/uploads/

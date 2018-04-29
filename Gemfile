@@ -20,9 +20,9 @@ gem 'coffee-rails', '~> 4.2'
 # Use Haml instead of ERB
 gem 'haml'
 #Carrier Wave for uploading images
-gem 'carrierwave', '~> 1.0'
+gem 'carrierwave'
 # See https://github.com/rails/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
+gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -30,13 +30,7 @@ gem 'jquery-rails'
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
-# Use Redis adapter to run Action Cable in production
-# gem 'redis', '~> 3.0'
-# Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
-
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
+gem 'fog-aws'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -75,4 +69,5 @@ gem 'mini_magick'
 gem 'devise'
 gem 'omniauth-facebook'
 gem 'city-state'
+gem 'geocoder'
 ruby '2.4.1'

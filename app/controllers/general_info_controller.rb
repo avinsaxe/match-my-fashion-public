@@ -17,6 +17,20 @@ class GeneralInfoController < ApplicationController
     return @return_array
   end
   
+  def make_admin
+    if(session[:current_user_key] != params[:user] && GeneralInfo.find_by(userKey: session[:current_user_key]).is_admin) 
+      @user_entry = GeneralInfo.find_by(userKey: params[:user])
+      if(@user_entry)
+        @user_entry.update_attribute(:is_admin, true)  
+        redirect_to "/show_profile?user_key="+ params[:user].to_s
+      else
+	redirect_to root_path
+      end           
+    else
+     redirect_to root_path
+    end
+  end
+
   # Displays the correct specific profile search when selected during GeneralInfo search
   def search_redirect
     @objects = params.except("utf8")
@@ -39,6 +53,7 @@ class GeneralInfoController < ApplicationController
    
   # Associated with the view used for create
   def new
+    @possible_Jobs = GeneralInfo.see_Jobs
     @templates = Template.uniq.pluck(:prof_name).sort
     @templates.unshift('Designer')
     @templates.unshift('Model')
@@ -77,6 +92,8 @@ class GeneralInfoController < ApplicationController
 
   # Create is called upon for the 2nd part of profile creation & routes to which specific profile to create after general info is submitted
   def create
+
+    @possible_Jobs = GeneralInfo.see_Jobs
     # Check to see if the required params are filled in
     error_statement = ""
     if params[:general_info][:first_name] == ""
@@ -117,27 +134,16 @@ class GeneralInfoController < ApplicationController
     # Creates a GeneralInfo object & assigns userKey to be the session key of the current user
     @general_info = GeneralInfo.new(general_info_params)
     @general_info.userKey = session[:current_user_key]
-    $template_name = params[:general_info][:specific_profile_id]
-    # Save GeneralInfo object to database & redirect to specific profile view
-    # Else display GeneralInfo view if save fails
-    $redirect_path = general_info_profession_specific_path
-    if $template_name == "Designer"
-        $redirect_path = new_specific_designer_path
-        @general_info.specific_profile_id = 1
-    elsif $template_name == "Model"
-        $redirect_path = new_specific_model_path
-        @general_info.specific_profile_id = 2
-    elsif $template_name == "Photographer"
-        $redirect_path = new_specific_photographer_path
-        @general_info.specific_profile_id = 3
+    @general_info.is_admin = false
+
+    if(GeneralInfo.any?)
+      @general_info.is_admin = false
     else
-        template_id1 = Template.find_by(prof_name: $template_name).id
-        @general_info.template_id = template_id1
+      @general_info.is_admin = true
     end
 
-
     if @general_info.save!
-        redirect_to $redirect_path
+        redirect_to "/edit_job"
     else
       render :action => 'new'
     end
@@ -145,13 +151,14 @@ class GeneralInfoController < ApplicationController
   
   # Params used to create the GeneralInfo object
   def general_info_params
-    params.require(:general_info).permit(:first_name, :last_name, :month_ofbirth, :day_ofbirth, :year_ofbirth, :gender, :phone, :country, :state, :city, :compensation, :facebook_link, :linkedIn_link, :instagram_link, :personalWebsite_link, :bio, :specific_profile_id, :profile_picture, :cover_picture, :gallery_pictures => [])
+    params.require(:general_info).permit(:first_name, :last_name, :month_ofbirth, :day_ofbirth, :year_ofbirth, :gender, :phone, :country, :state, :city, :compensation, :facebook_link, :linkedIn_link, :instagram_link, :personalWebsite_link, :bio, :specific_profile_id, :job_name, :profile_picture, :cover_picture, :gallery_pictures => [])
   end
   
   # Allows user to edit the general_info_params of the GeneralInfo object
   # Displays information pulled from database that matches the session key of the current user
   # Associated with the view used for update
   def edit
+    @possible_Jobs = GeneralInfo.see_Jobs
     if GeneralInfo.exists?(:userKey => session[:current_user_key])
       @general_info = GeneralInfo.find_by(userKey: session[:current_user_key])
     else
@@ -161,6 +168,7 @@ class GeneralInfoController < ApplicationController
    
   # Saves the edit of the GeneralInfo object to the database
   def update
+    @possible_Jobs = GeneralInfo.see_Jobs
     @general_info = GeneralInfo.find_by(userKey: session[:current_user_key])
     galleryPict = []
     if @general_info!=nil and @general_info[:gallery_pictures].present?
@@ -170,8 +178,7 @@ class GeneralInfoController < ApplicationController
       galleryPict=galleryPict+general_info_update_param[:gallery_pictures]
     end
     general_info_update_param[:gallery_pictures]=galleryPict
-
-    if @general_info.update_attributes(general_info_update_param)
+    if @general_info.update_attributes!(general_info_update_param)
       redirect_to '/show_profile'
     else
       render :action => 'edit'

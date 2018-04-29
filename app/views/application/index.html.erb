@@ -1,69 +1,617 @@
 <!DOCTYPE html>
-<html lang="en">
-<%= render :partial => "/layout/header" %>
+<html>
+<head>
+	<title>FashioNXT</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="shortcut icon" href="<%= asset_path "favicon.jpg"%>">
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="<%= asset_path "bootstrap.min.css"%>">
+	<link rel="stylesheet" href="<%= asset_path "icon.css"%>">
+	<link rel="stylesheet" href="<%= asset_path "loader.css"%>">
+	<link rel="stylesheet" href="<%= asset_path "idangerous.swiper.css"%>">
+	<link rel="stylesheet" href="<%= asset_path "jquery-ui.css"%>">
+	<link rel="stylesheet" href="<%= asset_path "stylesheet.css"%>">
+	
+</head>
+<body >
 
-<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+	<!-- THE LOADER -->
 
-<!-- Navigation -->
-<%= render :partial => "/layout/navigation" %>
-<!-- Intro Header -->
-<header class="intro">
-  <div class="intro-body">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-          <h1 class="brand-heading">FashioNXT</h1>
-          <p class="intro-text">Your fashion search begins here
-            <br></p>
-          <a href="#post-job" class="btn btn-circle page-scroll">
-            <i class="fa fa-angle-double-down animated"></i>
-          </a>
-        </div>
-      </div>
+	<div class="be-loader">
+    	<div class="spinner">
+			<img id="spinner-img" src="<%= asset_path "logo.png"%>"  alt="">
+			<p class="circle">
+			  <span class="ouro">
+			    <span class="left"><span class="anim"></span></span>
+			    <span class="right"><span class="anim"></span></span>
+			  </span>
+			</p>
+		</div>
     </div>
-  </div>
-</header>
+	<!-- THE HEADER -->
+	<header>
+		
+		<div class="container-fluid custom-container">
+			<div class="row no_row row-header">
+				<div class="brand-be">
+					<a href="/">
+						<img class="logo-c active be_logo"  src="<%= asset_path "logo.png"%>" alt="logo">
+						<img class="logo-c be_logo" src="<%= asset_path "logo.png"%>" alt="logo2">
+						<img  class="logo-c be_logo" src="<%= asset_path "logo.png"%>" alt="logo3">
+						<img class="logo-c be_logo" src="<%= asset_path "logo.png"%>" alt="logo4">
+					</a>
+				</div>
+				<div class="header-menu-block">
+					<button class="cmn-toggle-switch cmn-toggle-switch__htx"><span></span></button>
+					<ul class="header-menu" id="one">
+						<!--<li><a href="activity.html">Activity</a></li>-->
+						<li><a href="/search_profile/search">Search</a>
+							<!--<ul>
+								<li><a href="search.html">Explore</a></li>
+								<li><a href="people.html">People</a></li>
+								<li><a href="gallery.html">Galleries</a></li>
+							</ul>-->
+						</li>
+						<% if session[:current_user_key] %>
+							<li><a href="/show_profile">My Profile</a></li>
+						<% end %>
+						<!--<li><a href="site-map.html">Site Map</a></li>-->
+						<!--<li><a href="organization.html">Organization</a></li>-->
+						<!--<li id="ad-work-li"><a id="add-work-btn" class="btn color-1" href="work.html">Add Work </a></li>-->
+					</ul>
+				</div>
+				<div class="login-header-block">
+					<div class="login_block">
+						<% if session[:current_user_key] %>
+						<%= link_to 'Log out', logout_path, method: :get, :class => "btn color-1 size-2 hover-2" %>
+						<!--<a class="btn color-1 size-2 hover-2" href="/login_info/logout" ><i class="fa fa-user"></i>-->
+						<!--Log out</a>-->
+						<% else %>
+						<%= link_to 'Log in', login_path, method: :post, :class => "btn btn-login color-1 size-2 hover-2" %>
+						<!--<a class="btn btn-login color-1 size-2 hover-2" href="/application/login" ><i class="fa fa-user"></i>-->
+						<!--Log in</a>-->
+						<% end %>
+					</div>	
+				</div>
+			</div>
+		</div>
+		
+		
+	</header>
+		
+	<!-- MAIN CONTENT -->
+	
+	<div id="content-block">
+		<div class="head-bg">
+			<div class="head-bg-img"></div>
+			
+			<div class="large-popup-fixed"></div>
+			<% if flash[:notice] %>
+			<div class="alert-container col-md-12">
+				<div class="alert style-3 alert-dismissible">
+					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				    <strong><%= flash[:notice]%></strong> 
+				</div>
+			</div>
+			<% elsif flash[:success] %>
+			<div class="alert-container col-md-12">
+				<div class="alert style-3 alert-dismissible">
+					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				    <strong><%= flash[:success]%></strong> 
+				</div>
+			</div>
+			<% end %>
+			
+			<div class="head-bg-content">
+				<h1>Welcome to FashioNTWRK</h1>
+				<p>Your #1 social network for connecting to people in the fashion industry. </p>
+				<!--<a class="btn color-1 size-1 hover-1" ><i class="fa fa-facebook"></i>sign up via facebook</a>-->
+				<% if not session[:current_user_key] %>
+					<a class="be-register btn color-1 size-1 hover-6" href=""><i class="fa fa-lock"></i>sign up now</a>
+				<% end %>
+			</div>	
+		</div>
+		<!--<div class="container-fluid cd-main-content custom-container">
+			<div class="row">
+				<div class="col-md-2 left-feild">
+					<form action="./" class="input-search">
+						<input type="text" required="" placeholder="Enter keyword">
+							<i class="fa fa-search"></i>
+							<input type="submit" value="">
+					</form>				
+				</div>			
+				<div class="col-md-10 ">
+					<div class="for-be-dropdowns">
+						<div class="be-drop-down">
+							<i class="icon-projects"></i>
+							<span class="be-dropdown-content"> Projects	</span>
+							<ul class="drop-down-list">
+								<li class="filter" data-filter=".category-1"><a data-type="category-1">Projects</a></li>
+								<li class="filter" data-filter=".category-2"><a data-type="category-2">Work in Progress</a></li>
+								<li class="filter" data-filter=".category-3"><a data-type="category-3">People</a></li>
+							</ul>
+						</div>
+						<div class="be-drop-down">
+							<i class="icon-creative"></i>
+							<span class="be-dropdown-content">All Creative Filds
+							</span>
+							<ul class="drop-down-list">
+								<li class="filter" data-filter=".category-4"><a>Item - 1</a></li>
+								<li class="filter" data-filter=".category-5"><a>Item - 2</a></li>
+								<li class="filter" data-filter=".category-1"><a>Item - 3</a></li>
+							</ul>
+						</div>
+						<div class="be-drop-down">
+							<i class="icon-features"></i>
+							<span class="be-dropdown-content">Features
+							</span>
+							<ul class="drop-down-list">
+								<li class="filter" data-filter=".category-2"><a>Featured</a></li>
+								<li class="filter" data-filter=".category-3"><a>Most Appreciated</a></li>
+								<li class="filter" data-filter=".category-4"><a>Most Viewed</a></li>
+								<li class="filter" data-filter=".category-5"><a>Most Discussed</a></li>
+								<li class="filter" data-filter=".category-1"><a>Most Recent</a></li>
+							</ul>
+						</div>
+						<div class="be-drop-down">
+							<i class="icon-worldwide"></i>
+							<span class="be-dropdown-content">Worldwide
+							</span>
+							<ul class="drop-down-list">
+								<li class="filter" data-filter=".category-2"><a>WorldWide</a></li>
+								<li class="filter" data-filter=".category-3"><a>United States</a></li>
+								<li class="filter" data-filter=".category-4"><a>Germany</a></li>
+								<li class="filter" data-filter=".category-5"><a>United Kingdom</a></li>
+							</ul>
+						</div>
+					</div>				
+				</div>
+			</div>
+		</div>-->
+		<div class="container-fluid custom-container">
+			<div class="row">
+				<!--
+				<div class="col-md-2 left-feild">
+					<div class="be-vidget">
+						<h3 class="letf-menu-article">
+							Popular Creative Filds
+						</h3>
+						<div class="creative_filds_block">
+							<div class="ul">
+								<a  data-filter=".category-1" class="filter">Graphic Design		</a>
+								<a data-filter=".category-2" class="filter">Photography			</a>
+								<a data-filter=".category-3" class="filter">Interaction Design	</a>
+								<a data-filter=".category-4" class="filter">Art Direction		</a>
+								<a data-filter=".category-5" class="filter">Illustration		</a>
+							</div>
+						</div>
+					</div>
+					<div class="be-vidget">
+						<h3 class="letf-menu-article">
+							Popular Tags
+						</h3>
+						<div class="tags_block clearfix">
+							<ul>
+								<li><a data-filter=".category-6" class="filter">photoshop</a></li>
+								<li><a data-filter=".category-1" class="filter">graphic</a></li>
+								<li><a data-filter=".category-2" class="filter">art</a></li>
+								<li><a data-filter=".category-3" class="filter">website</a></li>
+								<li><a data-filter=".category-4" class="filter">logo</a></li>
+								<li><a data-filter=".category-5" class="filter">identity</a></li>
+								<li><a data-filter=".category-6" class="filter">logo design</a></li>
+								<li><a data-filter=".category-1" class="filter">interactive</a></li>
+								<li><a data-filter=".category-2" class="filter">blue</a></li>
+								<li><a data-filter=".category-3" class="filter">branding</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="be-vidget">
+						<h3 class="letf-menu-article">
+							Filter By
+						</h3>
+						<div class="filter-block">
+							<ul>
+								<li><a><i class="fa fa-graduation-cap"></i>Schools</a>
+									<div class="be-popup">
+										<h3 class="letf-menu-article">
+											Enter School
+										</h3>
+											<form action="./" class="input-search">
+												<input class="filters-input" type="text" required placeholder="Start typing to see list">
+											</form>
+										<i class="fa fa-times"></i>
+									</div>
+								</li>
+								<li><a><i class="fa fa-wrench"></i>Tools Used</a>
+									<div class="be-popup">
+										<h3 class="letf-menu-article">
+											Tools
+										</h3>
+											<form action="./" class="input-search">
+												<input class="filters-input" type="text" required placeholder="Start typing to see list">
+											</form>
+										<i class="fa fa-times"></i>
+									</div>
+								</li>
+								<li><a><i class="fa fa-paint-brush"></i>Color</a>
+									<div class="be-popup be-color-picker">
+									<h3 class="letf-menu-article">
+											Choose color
+										</h3>
+										<div class="for-colors">
+											<ul class="colors  cfix">
+												  <li data-filter=".category-1" class="color filter color-0-0"></li>
+												  <li data-filter=".category-2" class="color filter color-0-1"></li>
+												  <li data-filter=".category-3" class="color filter color-0-2"></li>
+												  <li data-filter=".category-4" class="color filter color-0-3"></li>
+												  <li data-filter=".category-5" class="color filter color-0-4"></li>
+												  <li data-filter=".category-1" class="color filter color-0-5"></li>
+												  <li data-filter=".category-2" class="color filter color-0-6"></li>
+												  <li data-filter=".category-3" class="color filter color-0-7"></li>
+												  <li data-filter=".category-4" class="color filter color-0-8"></li>
+												  <li data-filter=".category-5" class="color filter color-0-9"></li>
+												  <li data-filter=".category-1" class="color filter color-0-10"></li>
+												  <li data-filter=".category-5" class="color filter color-0-11"></li>
+												  <li data-filter=".category-1" class="color filter color-1-0"></li>
+												  <li data-filter=".category-2" class="color filter color-1-1"></li>
+												  <li data-filter=".category-1" class="color filter color-1-2"></li>
+												  <li data-filter=".category-1" class="color filter color-1-3"></li>
+												  <li data-filter=".category-1" class="color filter color-1-4"></li>
+												  <li data-filter=".category-4" class="color filter color-1-5"></li>
+												  <li data-filter=".category-1" class="color filter color-1-6"></li>
+												  <li data-filter=".category-1" class="color filter color-1-7"></li>
+												  <li data-filter=".category-6" class="color filter color-1-8"></li>
+												  <li data-filter=".category-1" class="color filter color-1-9"></li>
+												  <li data-filter=".category-1" class="color filter color-1-10"></li>
+												  <li data-filter=".category-1" class="color filter color-1-11"></li>
+												  <li data-filter=".category-1" class="color filter color-2-0"></li>
+												  <li data-filter=".category-1" class="color filter color-2-1"></li>
+												  <li data-filter=".category-1" class="color filter color-2-2"></li>
+												  <li data-filter=".category-1" class="color filter color-2-3"></li>
+												  <li data-filter=".category-1" class="color filter color-2-4"></li>
+												  <li data-filter=".category-1" class="color filter color-2-5"></li>
+												  <li data-filter=".category-1" class="color filter color-2-6"></li>
+												  <li data-filter=".category-1" class="color filter color-2-7"></li>
+												  <li data-filter=".category-1" class="color filter color-2-8"></li>
+												  <li data-filter=".category-1" class="color filter color-2-9"></li>
+												  <li data-filter=".category-1" class="color filter color-2-10"></li>
+												  <li data-filter=".category-1" class="color filter color-2-11"></li>
+												  <li data-filter=".category-1" class="color filter color-3-0"></li>
+												  <li data-filter=".category-1" class="color filter color-3-1"></li>
+												  <li data-filter=".category-1" class="color filter color-3-2"></li>
+												  <li data-filter=".category-1" class="color filter color-3-3"></li>
+												  <li data-filter=".category-1" class="color filter color-3-4"></li>
+												  <li data-filter=".category-1" class="color filter color-3-5"></li>
+												  <li data-filter=".category-1" class="color filter color-3-6"></li>
+												  <li data-filter=".category-1" class="color filter color-3-7"></li>
+												  <li data-filter=".category-1" class="color filter color-3-8"></li>
+												  <li data-filter=".category-1" class="color filter color-3-9"></li>
+												  <li data-filter=".category-1" class="color filter color-3-10"></li>
+												  <li data-filter=".category-1" class="color filter color-3-11"></li>
+												  <li data-filter=".category-1" class="color filter color-4-0"></li>
+												  <li data-filter=".category-1" class="color filter color-4-1"></li>
+												  <li data-filter=".category-1" class="color filter color-4-2"></li>
+												  <li data-filter=".category-1" class="color filter color-4-3"></li>
+												  <li data-filter=".category-1" class="color filter color-4-4"></li>
+												  <li data-filter=".category-1" class="color filter color-4-5"></li>
+												  <li data-filter=".category-1" class="color filter color-4-6"></li>
+												  <li data-filter=".category-1" class="color filter color-4-7"></li>
+												  <li data-filter=".category-1" class="color filter color-4-8"></li>
+												  <li data-filter=".category-1" class="color filter color-4-9"></li>
+												  <li data-filter=".category-1" class="color filter color-4-10"></li>
+												  <li data-filter=".category-1" class="color filter color-4-11"></li>
+												  <li data-filter=".category-1" class="color filter color-5-0"></li>
+												  <li data-filter=".category-1" class="color filter color-5-1"></li>
+												  <li data-filter=".category-1" class="color filter color-5-2"></li>
+												  <li data-filter=".category-1" class="color filter color-5-3"></li>
+												  <li data-filter=".category-1" class="color filter color-5-4"></li>
+												  <li data-filter=".category-1" class="color filter color-5-5"></li>
+												  <li data-filter=".category-1" class="color filter color-5-6"></li>
+												  <li data-filter=".category-1" class="color filter color-5-7"></li>
+												  <li data-filter=".category-1" class="color filter color-5-8"></li>
+												  <li data-filter=".category-1" class="color filter color-5-9"></li>
+												  <li data-filter=".category-1" class="color filter color-5-10"></li>
+												  <li data-filter=".category-1" class="color filter color-5-11"></li>
+												  <li data-filter=".category-1" class="color filter color-6-0"></li>
+												  <li data-filter=".category-1" class="color filter color-6-1"></li>
+												  <li data-filter=".category-6" class="color filter color-6-2"></li>
+												  <li data-filter=".category-1" class="color filter color-6-3"></li>
+												  <li data-filter=".category-1" class="color filter color-6-4"></li>
+												  <li data-filter=".category-1" class="color filter color-6-5"></li>
+												  <li data-filter=".category-1" class="color filter color-6-6"></li>
+												  <li data-filter=".category-1" class="color filter color-6-7"></li>
+												  <li data-filter=".category-1" class="color filter color-6-8"></li>
+												  <li data-filter=".category-1" class="color filter color-6-9"></li>
+												  <li data-filter=".category-1" class="color filter color-6-10"></li>
+												  <li data-filter=".category-1" class="color filter color-6-11"></li>
+												  <li data-filter=".category-1" class="color filter color-7-0"></li>
+												  <li data-filter=".category-1" class="color filter color-7-1"></li>
+												  <li data-filter=".category-1" class="color filter color-7-2"></li>
+												  <li data-filter=".category-1" class="color filter color-7-3"></li>
+												  <li data-filter=".category-1" class="color filter color-7-4"></li>
+												  <li data-filter=".category-1" class="color filter color-7-5"></li>
+												  <li data-filter=".category-1" class="color filter color-7-6"></li>
+												  <li data-filter=".category-1" class="color filter color-7-7"></li>
+												  <li data-filter=".category-1" class="color filter color-7-8"></li>
+												  <li data-filter=".category-1" class="color filter color-7-9"></li>
+												  <li data-filter=".category-1" class="color filter color-7-10"></li>
+												  <li data-filter=".category-1" class="color filter color-7-11"></li>
+												  <li data-filter=".category-1" class="color filter color-8-0"></li>
+												  <li data-filter=".category-1" class="color filter color-8-1"></li>
+												  <li data-filter=".category-1" class="color filter color-8-2"></li>
+												  <li data-filter=".category-1" class="color filter color-8-3"></li>
+												  <li data-filter=".category-1" class="color filter color-8-4"></li>
+												  <li data-filter=".category-1" class="color filter color-8-5"></li>
+												  <li data-filter=".category-1" class="color filter color-8-6"></li>
+												  <li data-filter=".category-6" class="color filter color-8-7"></li>
+												  <li data-filter=".category-1" class="color filter color-8-8"></li>
+												  <li data-filter=".category-1" class="color filter color-8-9"></li>
+												  <li data-filter=".category-1" class="color filter color-8-10"></li>
+												  <li data-filter=".category-1" class="color filter color-8-11"></li>
+												  <li data-filter=".category-1" class="color filter color-9-0"></li>
+												  <li data-filter=".category-1" class="color filter color-9-1"></li>
+												  <li data-filter=".category-1" class="color filter color-9-2"></li>
+												  <li data-filter=".category-1" class="color filter color-9-3"></li>
+												  <li data-filter=".category-6" class="color filter color-9-4"></li>
+												  <li data-filter=".category-1" class="color filter color-9-5"></li>
+												  <li data-filter=".category-1" class="color filter color-9-6"></li>
+												  <li data-filter=".category-1" class="color filter color-9-7"></li>
+												  <li data-filter=".category-1" class="color filter color-9-8"></li>
+												  <li data-filter=".category-1" class="color filter color-9-9"></li>
+												  <li data-filter=".category-1" class="color filter color-9-10"></li>
+												  <li data-filter=".category-1" class="color filter color-9-11"></li>
+											</ul>
+										</div>
+										<i class="fa fa-times"></i>
+											
+									</div>
+								</li>
+								<li><a><i class="fa fa-camera-retro"></i>Visit Gallery</a>
+									<div class="be-popup">
+										<h3 class="letf-menu-article">
+											Galerry
+										</h3>
+											<form action="./" class="input-search">
+												<input  class="filters-input" type="text" required placeholder="Start typing to see list">
+											</form>
+										<i class="fa fa-times"></i>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>-->
+				<div class="col-md-10">
+					<h2>Latest User Changes</h2>
+				</div>
 
-<section id="post-job" class="content-section text-center">
-  <div class="download-section">
-    <div class="container">
-      <% if not session[:current_user_key] %>
-        <div class="col-lg-8 col-lg-offset-2">
-          <h2>Log In / Sign Up</h2>
-          <p></p>
-          <a href="/login_info/login" class="btn btn-default btn-lg">Log In / Signup</a>
-        </div>
-      <% end %>
-    </div>
-  </div>
-</section>
+				<div class="col-md-10">
+					<div id="container-mix"  class="row _post-container_">
+						<div class="category-1 mix custom-column-5">
+							<% @users.each do |info| %>
+								<div class="be-post">
+									<a href="<%= show_profile_show_profile_path(:user_key => info.userKey) %>" class="be-img-block">
+									<% if info.profile_picture? %>
+									<img src="<%= info.profile_picture.url %>" alt="omg">
+									<% else %>
+									<img src="http://www.combonetwork.com/img/empty_profile.png">
+									<% end %>
+									</a>
+									<a href="<%= show_profile_show_profile_path(:user_key => info.userKey) %>" class="be-post-title"><%= info.first_name %> <%= info.last_name %><br><%= info.attribute_values[:job_name] %></a>
+								</div>
+							<% end %>
+						</div>
+						<!--<div class="category-2 mix custom-column-5">
+							<div class="be-post">
+								<a href="page2.html" class="be-img-block">
+								<img src="https://mir-s3-cdn-cf.behance.net/projects/404/fba1be63895793.Y3JvcCw3ODcsNjE2LDU3Myw3MQ.jpg" alt="omg">
+								</a>
+								<a href="page2.html" class="be-post-title">Treebeard</a>
+								<span>
+									<a href="blog-detail-2.html" class="be-post-tag">Interaction Design</a>, 
+									<a href="blog-detail-2.html" class="be-post-tag">UI/UX</a>,  
+									<a href="blog-detail-2.html" class="be-post-tag">Web Design</a>
+								</span>
+								<div class="author-post">
+									<img src="https://mir-s3-cdn-cf.behance.net/projects/404/46e90a64667369.Y3JvcCwxMDkxLDg1NCw4MDAsMzM2.jpg" alt="" class="ava-author">
+									<span>by <a href="page2.html">Hoang Nguyen</a></span>
+								</div>
+								<div class="info-block">
+									<span><i class="fa fa-thumbs-o-up"></i> 360</span>
+									<span><i class="fa fa-eye"></i> 789</span>
+									<span><i class="fa fa-comment-o"></i> 20</span>
+								</div>
+							</div>
+						</div>-->
+					</div>
+				</div>
 
-<!-- Contact Section -->
-<section id="contact" class="container content-section text-center">
-  <div class="row">
-    <div class="col-lg-8 col-lg-offset-2">
-      <h2>Contact FashionXT</h2>
-      <p>Feel free to email us to provide some feedback, give us suggestions, or to just say hello!</p>
-      <p><a href="mailto:support@fashionnxt.com">support@fashionnxt.com</a>
-      </p>
-      <ul class="list-inline banner-social-buttons">
-        <li>
-          <a href="https://www.twitter.com/fashionxtonline" class="btn btn-default btn-lg"><i class="fa fa-twitter fa-fw"></i> <span class="network-name">Twitter</span></a>
-        </li>
-        <li>
-          <a href="https://www.facebook.com/fashionxtonline" class="btn btn-default btn-lg"><i class="fa fa fa-facebook fa-fw"></i> <span class="network-name">Facebook</span></a>
-        </li>
-        <li>
-          <a href="http://instagram.com/fashionxtonline" class="btn btn-default btn-lg"><i class="fa fa-instagram fa-fw"></i> <span class="network-name">Instagram</span></a>
-        </li>
-        <li>
-          <a href="https://www.pinterest.com/fashionxtonline/" class="btn btn-default btn-lg"><i class="fa fa-pinterest fa-fw"></i> <span class="network-name">Pinterest</span></a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</section>
-<%= render :partial => "/layout/javascripts" %>
-</body>
-<%= render :partial => "/layout/footer" %>
+			</div>
+		</div>
+	</div>
+	<!-- THE FOOTER -->
+	<footer>	
+		<div class="footer-main">
+			<div class="container-fluid custom-container">
+				<div class="row">	
+					<div class="col-md-3 col-xl-4">
+						<div class="footer-block">
+							<h1 class="footer-title">About Us</h1>
+							<p>FashioNXT creates innovative fashion experiences and the creative edge in lifestyle technology.</p>
+							<ul class="soc_buttons">
+								<li><a href="https://www.facebook.com/FASHIONXtONLINE/"><i class="fa fa-facebook"></i></a></li>
+								<li><a href="https://twitter.com/fashionxtonline"><i class="fa fa-twitter"></i></a></li>
+								<li><a href="https://www.pinterest.com/fashionxtonline/"><i class="fa fa-pinterest"></i></a></li>
+								<li><a href="https://www.instagram.com/fashionxtonline/"><i class="fa fa-instagram"></i></a></li>
+								<li><a href="https://www.linkedin.com/company/fashionxt/"><i class="fa fa-linkedin"></i></a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-md-6 col-xl-2">
+						<div class="footer-block">
+							<h1 class="footer-title">Some Links</h1>
+							<div class="row footer-list-footer">
+							<div class="col-md-6">
+							<ul class="link-list">
+								<li><a href="http://fashionxt.com/">About Us</a></li>
+								<li><a href="contact-us.html">Help</a></li>
+								<li><a href="contact-us.html">Contacts</a></li>
+								<li><a href="activity.html">Job</a></li>
+								<li><a href="activity.html">Projets</a></li>
+							</ul></div>
+							<!--<div class="col-md-6">-->
+							<!--<ul class="link-list">-->
+							<!--	<li><a href="activity.html">New Works</a></li>-->
+							<!--	<li><a href="author.html">Popular Authors</a></li>-->
+							<!--	<li><a href="author.html">New Authors</a></li>-->
+							<!--	<li><a href="people.html">Career</a></li>-->
+							<!--	<li><a href="faq">FAQ</a></li>-->
+							<!--</ul>-->
+							<!--</div>-->
+							</div>
+						</div>
+					</div>	
+					<!--<div class="col-md-3">-->
+					<!--	<div class="footer-block">-->
+					<!--		<h1 class="footer-title">Subscribe On Our News</h1>-->
+					<!--		<form action="./" class="subscribe-form">-->
+					<!--			<input type="text" placeholder="Yout Name" required>-->
+					<!--			<div class="submit-block">-->
+					<!--				<i class="fa fa-envelope-o"></i>-->
+					<!--				<input type="submit" value="">-->
+					<!--			</div>-->
+					<!--		</form>-->
+					<!--		<div class="soc-activity">-->
+					<!--			<div class="soc_ico_triangle">-->
+					<!--				<i class="fa fa-twitter"></i>-->
+					<!--			</div>-->
+					<!--			<div class="message-soc">-->
+					<!--				<div class="date">16h ago</div>-->
+					<!--				<a href="blog-detail-2.html" class="account">@faq</a> vestibulum accumsan est <a href="blog-detail-2.html" class="heshtag">blog-detail-2.htmlmalesuada</a> sem auctor, eu aliquet nisi ornare leo sit amet varius egestas.-->
+					<!--			</div>-->
+					<!--		</div>-->
+					<!--	</div>-->
+					<!--</div>-->
+				</div>
+			</div>
+		</div>
+		<div class="footer-bottom">
+			<div class="container-fluid custom-container">
+				<div class="col-md-12 footer-end clearfix">
+					<div class="left">
+						<span class="copy">© 2018. All rights reserved. <span class="white"><a href="fashionxt.com"> FashioNXT</a></span></span>
+						<span class="created">Created with LOVE by <span class="white"><a href=""> ThatSoftwareEngineeringGroup</a></span></span>
+					</div>
+					<!--<div class="right">-->
+					<!--	<a class="btn color-7 size-2 hover-9">About Us</a>-->
+					<!--	<a class="btn color-7 size-2 hover-9">Help</a>-->
+					<!--	<a class="btn color-7 size-2 hover-9">Privacy Policy</a>-->
+					<!--</div>-->
+				</div>			
+			</div>
+		</div>		
+	</footer>
+
+	<div class="be-fixed-filter"></div>
+	
+	<%= form_for :login_info, :action => 'login_submit', :url => login_info_login_submit_path do |form| %>
+	<div class="large-popup login">
+		<div class="container large-popup-container">
+			<div class="row">
+				<div class="col-md-8 col-md-push-2 col-lg-6 col-lg-push-3  large-popup-content">
+					<div class="row">
+						<div class="col-md-12">
+							<i class="fa fa-times close-button"></i>
+							<h5 class="large-popup-title">Log in</h5>
+						</div>
+						<form action="#" class="popup-input-search" method="post">
+						<div class="col-md-6">
+							<%= form.text_field :email, :class => 'input-signtype', :id => 'email', :placeholder => 'Your Email', :required => ''%>
+							<!--<input class="input-signtype" type="email" required="" placeholder="Your email">-->
+						</div>
+						<div class="col-md-6 form-group">
+							<%= form.password_field :password, :class => 'input-signtype', :id => 'password', :placeholder => 'Your Password', :required => '' %>
+							<!--<input id= "password" class="input-signtype" type="password" required="" placeholder="Password">-->
+						</div>
+						<div class="col-xs-6"></div>
+						<div class="col-xs-6 for-signin">
+							<%= form.submit "SIGN IN", :class => 'be-popup-sign-button', :type => 'submit' %>
+							<!--<input type="submit" class="be-popup-sign-button" value="SIGN IN">-->
+						</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<% end %>
+	<div class="large-popup register">
+		<div class="large-popup-fixed"></div>
+		<div class="container large-popup-container">
+			<div class="row">
+				<div class="col-md-10 col-md-push-1 col-lg-8 col-lg-push-2 large-popup-content">
+					<div class="row">
+						<div class="col-md-12">
+							<i class="fa fa-times close-button"></i>
+							<h5 class="large-popup-title">Register</h5>
+						</div>
+						<form action="./" class="popup-input-search">
+						
+						<div class="col-md-6">
+							<input class="input-signtype" type="text" required="" placeholder="Email">
+						</div>
+						<div class="col-md-6">
+							<input class="input-signtype" type="text" required="" placeholder="Password">
+						</div>
+						<div class="col-md-6">
+							<input class="input-signtype" type="text" required="" placeholder="Repeat Password">
+						</div>
+						
+						<div class="col-md-6">
+							<div class="be-checkbox">
+								<label class="check-box">
+								    <input class="checkbox-input" type="checkbox" required="" value="" > <span class="check-box-sign"></span>
+								</label>
+								<span class="large-popup-text">
+									I have read and agree to the <a class="be-popup-terms" href="blog-detail-2.html">Terms of Use</a> and <a class="be-popup-terms" href="blog-detail-2.html">Privacy Policy</a>.
+								</span>
+							</div>
+						</div>
+						<div class="col-md-6 for-signin">
+							<input type="submit" class="be-popup-sign-button" value="SIGN IN">
+						</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--<div class="theme-config">-->
+	<!--    <div class="main-color">-->
+	<!--        <div class="title">Main Color:</div>-->
+	<!--        <div class="colours-wrapper">-->
+	<!--            <div class="entry color1 m-color active" data-colour="style/stylesheet.css"></div>   -->
+	<!--            <div class="entry color3 m-color"  data-colour="style/style-green.css"></div>-->
+	<!--            <div class="entry color6 m-color"  data-colour="style/style-orange.css"></div>-->
+	<!--            <div class="entry color8 m-color"  data-colour="style/style-red.css"></div>  -->
+	<!--            <div class="title">Second Color:</div>  -->
+	<!--            <div class="entry s-color  active color10"  data-colour="style/stylesheet.css"></div>-->
+	<!--            <div class="entry s-color color11"  data-colour="style/style-oranges.css"></div> -->
+	<!--            <div class="entry s-color color12"  data-colour="style/style-greens.css"></div>-->
+	<!--            <div class="entry s-color color13"  data-colour="style/style-reds.css"></div>-->
+	<!--        </div>-->
+	<!--    </div>-->
+	<!--   <div class="open"><img src="<%= asset_path "icon-134.png"%>" alt=""></div>-->
+	<!--</div>-->
+	<!-- SCRIPTS	 -->
+	<script src="<%= asset_path "jquery.min.js"%>"></script>
+	<script src="<%= asset_path "jquery-ui.js"%>"></script>
+	<script src="<%= asset_path "bootstrap.min.js"%>"></script>		
+	<script src="<%= asset_path "idangerous.swiper.min.js"%>"></script>
+	<script src="<%= asset_path "jquery.mixitup.js"%>"></script>
+	<script src="<%= asset_path "jquery.viewportchecker.min.js"%>"></script>
+	<script src="<%= asset_path "global.js"%>"></script>
+	</body>
 </html>
